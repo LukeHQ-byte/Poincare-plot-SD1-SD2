@@ -1,0 +1,50 @@
+# Input data
+x_data = [22, 68, 70, 42, 74, 64, 74, 31, 43, 104, 35, 104, 109, 48, 106, 45, 43, 77, 86, 89, 50, 90]
+y_data = [64, 24, 93, 71, 56, 25, 79, 64, 40, 39, 50, 39, 108, 41, 91, 53, 135, 78, 90, 68, 41, 76]
+
+# Check for equal length
+if len(x_data) != len(y_data):
+    raise ValueError("Input x_data and y_data must have the same length.")
+
+# Function to calculate mean
+def mean(data):
+    return sum(data) / len(data)
+
+# Function to calculate variance
+def variance(data):
+    mean_value = mean(data)
+    return sum((x - mean_value) ** 2 for x in data) / len(data)
+
+# Function to calculate SD1 and SD2
+def calculate_sd1_sd2(x, y):
+    differences = [y[i] - x[i] for i in range(len(x))]
+    sums = [y[i] + x[i] for i in range(len(x))]
+    sd1 = (variance(differences) / 2) ** 0.5
+    sd2 = (variance(sums) / 2) ** 0.5
+    return sd1, sd2
+
+# Calculate SD1 and SD2
+sd1, sd2 = calculate_sd1_sd2(x_data, y_data)
+
+# Print results
+print(f"SD1: {sd1:.2f}")
+print(f"SD2: {sd2:.2f}")
+
+# Basic text-based plot for visualization
+print("\nPoincaré Plot (Text-Based):")
+min_value = min(min(x_data), min(y_data))
+max_value = max(max(x_data), max(y_data))
+scale = 50 / (max_value - min_value)  # Scale factor for text-based plot
+offset = int(abs(min_value) * scale)  # Offset for the plot if min_value < 0
+
+# Create the plot grid
+plot_grid = [[" " for _ in range(60)] for _ in range(20)]
+for x, y in zip(x_data, y_data):
+    plot_x = int(x * scale + offset)
+    plot_y = int(y * scale + offset)
+    if 0 <= plot_x < 60 and 0 <= plot_y < 20:
+        plot_grid[19 - plot_y][plot_x] = "o"
+
+# Display the plot
+for row in plot_grid:
+    print("".join(row))
